@@ -1,0 +1,2 @@
+TOKEN="1223:adfADFH"
+CHAT_ID=""

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 800px; margin: 40px auto;" class="animate-in">
+    <div class="glass-card">
+        <h2 style="margin-bottom: 35px;">Ma'lumotlarni <span style="color: var(--primary);">Tasdiqlang</span></h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-group" style="margin-bottom: 20px;">
+                <input type="text" name="full_name" placeholder="F.I.SH" required>
+            </div>
+            <div class="input-group" style="margin-bottom: 20px;">
+                <input type="text" name="phone" placeholder="Telefon (+998 ...)" required>
+            </div>
+            <div class="input-group" style="margin-bottom: 30px;">
+                <textarea name="address" rows="4" placeholder="Yetkazib berish manzili..." required></textarea>
+            </div>
+            <button type="submit" class="btn" style="width: 100%; font-size: 1.2rem;">Xaridni Yakunlash</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

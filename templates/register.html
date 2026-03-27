@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 90vh; padding: 20px;">
+    <div class="cart-section" style="max-width: 500px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 30px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            Ro'yxatdan O'tish
+        </h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin-bottom: 15px;">
+                <input type="text" name="username" class="search-input" placeholder="Foydalanuvchi nomi" required>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <input type="text" name="fullname" class="search-input" placeholder="To'liq ism-sharifingiz" required>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <input type="text" name="phone_number" class="search-input" placeholder="Telefon: 998XXXXXXXXX" required>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <input type="password" name="password" class="search-input" placeholder="Yangi parol" required>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <input type="password" name="password2" class="search-input" placeholder="Parolni takrorlang" required>
+            </div>
+            
+            <button type="submit" class="btn" style="font-size: 1.1rem; letter-spacing: 2px;">
+                HISOB YARATISH
+            </button>
+        </form>
+
+        <p style="text-align: center; margin-top: 25px; color: #94a3b8;">
+            Akkauntingiz bormi? 
+            <a href="{% url 'login' %}" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Tizimga kirish</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

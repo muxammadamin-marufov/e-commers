@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMM Premium Market</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050811;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #22d3ee;
+            --text: #f3f4f6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #22d3ee 100%);
+        }
+
+        * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 35%),
+                radial-gradient(circle at 100% 100%, rgba(34, 211, 238, 0.1) 0%, transparent 35%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Reusable Components --- */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 30px;
+        }
+
+        .btn {
+            background: var(--gradient);
+            color: white !important;
+            padding: 16px 30px;
+            border-radius: 18px;
+            border: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.7);
+            letter-spacing: 2.5px;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .nav-link { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .nav-link:hover { color: var(--accent); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeIn 0.8s ease forwards; }
+    </style>
+</head>
+<body>
+    <nav style="padding: 25px 50px; display: flex; justify-content: space-between; align-items: center;">
+        <a href="{% url 'index' %}" style="font-size: 1.8rem; font-weight: 900; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration:none;">MMM.PRO</a>
+        <div style="display: flex; gap: 30px; align-items: center;">
+            <a href="{% url 'index' %}" class="nav-link">Market</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'cart_detail' %}" class="nav-link">Savat 🛒</a>
+                <span style="color: var(--accent);">@{{ user.username }}</span>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-link">Kirish</a>
+                <a href="{% url 'register' %}" class="btn" style="padding: 10px 20px; font-size: 0.8rem;">Qo'shilish</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 1300px; margin: 0 auto; padding: 20px;">
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding: 15px; background: rgba(99, 102, 241, 0.2); border: 1px solid var(--primary); border-radius: 15px; margin-bottom: 20px; text-align: center;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        // Global tilt effect for cards
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                let rect = card.getBoundingClientRect();
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+                let dx = x - rect.width / 2;
+                let dy = y - rect.height / 2;
+                if (Math.abs(dx) < rect.width && Math.abs(dy) < rect.height) {
+                    card.style.transform = `perspective(1000px) rotateX(${-dy / 20}deg) rotateY(${dx / 20}deg) translateY(-5px)`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="glass-card animate-in">
+    <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Sizning <span style="color: var(--accent);">Tanlovlaringiz</span></h2>
+    
+    {% for item in cart_items %}
+    <div id="cart-item-{{ item.product.id }}" style="display: flex; align-items: center; padding: 20px; border-bottom: 1px solid var(--glass-border); margin-bottom: 15px; transition: 0.3s;">
+        <img src="{{ item.product.image.url }}" style="width: 80px; height: 80px; border-radius: 15px; object-fit: cover; margin-right: 25px;">
+        
+        <div style="flex-grow: 1;">
+            <h4 style="font-size: 1.2rem;">{{ item.product.name }}</h4>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px;">
+                Donasi: $<span id="price-{{ item.product.id }}">{{ item.product.price }}</span> | Omborda: {{ item.product.stock }} ta
+            </p>
+            
+            <div style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 12px; border: 1px solid var(--glass-border); width: fit-content;">
+                
+                <button onclick="updateCart('{{ item.product.id }}', 'minus')" style="background:none; border:none; color:var(--accent); font-size:1.5rem; cursor:pointer; font-weight:800;">−</button>
+
+                <input type="number" 
+                       id="qty-{{ item.product.id }}" 
+                       value="{{ item.quantity }}" 
+                       min="1" max="{{ item.product.stock }}"
+                       onchange="updateCart('{{ item.product.id }}', 'manual')"
+                       style="width: 60px; text-align: center; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; font-weight: 800; font-size: 1.1rem; border-radius: 8px; padding: 2px;">
+
+                <button onclick="updateCart('{{ item.product.id }}', 'plus')" style="background:none; border:none; color:var(--accent); font-size:1.5rem; cursor:pointer; font-weight:800;">+</button>
+            </div>
+        </div>
+
+        <div style="text-align: right;">
+            <div id="total-{{ item.product.id }}" style="font-size: 1.3rem; font-weight: 800; color: var(--text); transition: 0.2s;">
+                ${{ item.total_price }}
+            </div>
+            <button onclick="updateCart('{{ item.product.id }}', 'delete')" style="background:none; border:none; color: #ef4444; font-size: 0.8rem; cursor:pointer; margin-top: 10px;">O'chirish</button>
+        </div>
+    </div>
+    {% empty %}
+    <p id="empty-msg" style="text-align: center; padding: 50px; color: #64748b;">Savat bo'sh...</p>
+    {% endfor %}
+    
+    {% if cart_items %}
+    <div id="checkout-section" style="text-align: right; padding-top: 30px;">
+        <p style="font-size: 1rem; color: #94a3b8;">Umumiy:</p>
+        <h2 style="font-size: 3rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            $<span id="cart-total-price">{{ total }}</span>
+        </h2>
+        <a href="{% url 'checkout' %}" class="btn" style="margin-top: 20px; padding: 20px 60px;">Buyurtma Berish</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function updateCart(productId, action) {
+    const qtyInput = document.getElementById(`qty-${productId}`);
+    const quantity = qtyInput ? qtyInput.value : 0;
+
+    fetch(`/update-cart/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            'action': action,
+            'quantity': quantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const itemElement = document.getElementById(`cart-item-${productId}`);
+
+            // 1. O'chirish holati (delete tugmasi bosilsa yoki input 0 bo'lsa)
+            if (data.deleted) {
+                itemElement.style.transform = 'translateX(50px)'; // O'ngga siljish
+                itemElement.style.opacity = '0'; // Yo'qolish
+                
+                setTimeout(() => {
+                    itemElement.remove();
+                    // Agar savat butunlay bo'shab qolsa
+                    if (data.cart_total <= 0) {
+                        location.reload(); 
+                    }
+                }, 400);
+            } 
+            // 2. Miqdor o'zgarishi
+            else {
+                if (data.error) {
+                    alert(data.message);
+                }
+                qtyInput.value = data.item_qty;
+                document.getElementById(`total-${productId}`).innerText = '$' + data.item_total.toFixed(2);
+            }
+            
+            // Umumiy summani yangilash
+            document.getElementById('cart-total-price').innerText = data.cart_total.toFixed(2);
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="glass-card animate-in" style="width: 100%; max-width: 450px;">
+        <h2 style="margin-bottom: 30px; text-align: center; font-size: 2rem;">Tizimga <span style="color: var(--primary);">Kirish</span></h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-group" style="margin-bottom: 20px;">
+                <input type="text" name="user" placeholder="Username" required>
+            </div>
+            <div class="input-group" style="margin-bottom: 30px;">
+                <input type="password" name="password" placeholder="Parol" required>
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">Davom etish →</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
