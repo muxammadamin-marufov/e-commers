@@ -1,6 +1,5 @@
 # Python 3.10 talqini (Django 6.0 uchun mos)
 FROM python:3.10
-
 # Hugging Face uchun maxsus foydalanuvchi yaratish (xavfsizlik uchun)
 RUN useradd -m -u 1000 user
 USER user
