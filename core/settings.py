@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-import dj_database_url
+# import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-default-key-uz-2026
 
 # Production-da DEBUG False bo'ladi, agar Secret-ga DEBUG=True qo'shmasangiz
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-
+# DEBUG = True
 # Hugging Face manzillarini aniq ko'rsatish xavfsizroq
 ALLOWED_HOSTS = ['*', '.hf.space', 'localhost', '127.0.0.1']
 
@@ -28,8 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'market', 
-    'storages', 
+    'market',
+    'storages',
 ]
 
 # Unfold Admin sozlamalari
@@ -73,16 +73,13 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # --- MA'LUMOTLAR BAZASI (SUPABASE) ---
 # Siz bergan yangi URL: https://fslryydojcmqrpchiysf.supabase.co
-# Connection string: postgresql://postgres:M1m2m3m4m5m6@db.fslryydojcmqrpchiysf.supabase.co:5432/postgres
-
+# Connection string: postgresql://postgres:M1m2m3m4m5m6@db.fslryydojcmqrpchiysf.supabase.co:5432/postgre
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL', "postgresql://postgres:M1m2m3m4m5m6@db.fslryydojcmqrpchiysf.supabase.co:5432/postgres"),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
-
 # --- PAROL TEKSHIRUVCHILARI ---
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -92,7 +89,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # --- TIL VA VAQT ---
-LANGUAGE_CODE = 'uz' 
+LANGUAGE_CODE = 'uz'
 TIME_ZONE = 'Asia/Tashkent'
 USE_I18N = True
 USE_TZ = True
