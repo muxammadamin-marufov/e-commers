@@ -165,24 +165,29 @@ def update_cart(request, product_id):
 def checkout(request):
     cart_items = Cart.objects.filter(user=request.user)
     if not cart_items.exists():
-        messages.warning(request, "Savatingiz bo'sh!")
         return redirect('index')
     
     total = get_total(request)
 
     if request.method == 'POST':
-        full_name = request.POST.get('full_name')
-        phone = request.POST.get('phone')
-        address = request.POST.get('address')
-        items_summary = "\n".join([f"• {item.product.name} ({item.quantity} dona) - {item.product.price * item.quantity:,} so'm" for item in cart_items])
-        Order.objects.create(
+        # 1. Avval asosiy buyurtmani yaratamiz
+        order = Order.objects.create(
             user=request.user,
-            full_name=full_name,
-            phone=phone,
-            address=address,
-            total_amount=total,
-            items_json=items_summary,
+            full_name=request.POST.get('full_name'),
+            phone=request.POST.get('phone'),
+            address=request.POST.get('address'),
+            total_amount=total
+            # items_json ni yozish shart emas, chunki pastda OrderItem yaratyapmiz
         )
+
+        # 2. Endi savatdagi har bir narsani "Order tarkibi"ga qo'shamiz
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,            # Buyurtmaga bog'laymiz
+                product=item.product,   # Qaysi mahsulot
+                price=item.product.price, # Olingan paytdagi narxi
+                quantity=item.quantity  # Nechta olingani
+            )
         message_text = (
             f"🛍 <b>Yangi buyurtma!</b>\n"
             f"━━━━━━━━━━━━━━━\n"
