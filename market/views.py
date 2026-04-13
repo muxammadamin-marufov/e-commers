@@ -181,6 +181,7 @@ def checkout(request):
             phone=phone,
             address=address,
             total_amount=total,
+            items_json=items_summary,
         )
         message_text = (
             f"🛍 <b>Yangi buyurtma!</b>\n"
