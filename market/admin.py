@@ -1,18 +1,19 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin  
-from .models import Product, Category,Order
-from django.contrib.auth.models import User
+from .models import Category, Product, Cart, Order, OrderItem
+
+# Buyurtma ichidagi mahsulotlarni Order sahifasining o'zida ko'rsatish uchun
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0 # Bo'sh qatorlar ko'rinmasligi uchun
+    readonly_fields = ['product', 'price', 'quantity'] # O'zgartirib bo'lmasligi uchun (ixtiyoriy)
+
 @admin.register(Order)
-class OrderAdmin(ModelAdmin):
-    list_display = ["user", "full_name", "phone", "address", "total_amount", "created_at"]
-    list_filter = ["user", "created_at"]
-    search_fields = ["user__username", "full_name", "phone", "address"]
-    date_hierarchy = "created_at"
-    ordering = ["-created_at"]
-@admin.register(Category)
-class CategoryAdmin(ModelAdmin):
-    pass
-@admin.register(Product)
-class ProductAdmin(ModelAdmin):
-    list_display = ["name", "price", "category"] 
-    pass
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'full_name', 'phone', 'total_amount', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['full_name', 'phone']
+    inlines = [OrderItemInline] # Mana shu narsa buyurtma ichida mahsulotlarni ko'rsatadi
+
+admin.site.register(Category)
+admin.site.register(Product)
+admin.site.register(Cart)
