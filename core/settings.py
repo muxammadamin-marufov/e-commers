@@ -9,8 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-default-key-uz-2026')
 
 # Production-da DEBUG False bo'ladi, agar Secret-ga DEBUG=True qo'shmasangiz
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-# DEBUG = True
+# DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 # Hugging Face manzillarini aniq ko'rsatish xavfsizroq
 ALLOWED_HOSTS = ['*', '.hf.space', 'localhost', '127.0.0.1']
 
@@ -52,7 +52,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'core.urls'
-
+AUTH_USER_MODEL = 'market.CustomUser'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

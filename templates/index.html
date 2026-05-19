@@ -1,39 +1,92 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-<header style="text-align: center; margin: 60px 0;">
-    <h1 class="animate-in" style="font-size: 4.5rem; letter-spacing: -2px;">Keling, <span style="background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Kelajakni</span> sotib olamiz</h1>
-    <form method="GET" style="max-width: 600px; margin: 40px auto;" class="animate-in">
-        <div class="input-group">
-            <input type="text" name="q" placeholder="Qidirayotgan narsangiz bormi?..." value="{{ query|default:'' }}">
-        </div>
-    </form>
+
+<header class="text-center my-12">
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4">
+        Keling, <span class="text-gradient">Kelajakni</span> sotib olamiz
+    </h1>
+    <p class="text-gray-400 text-sm max-w-md mx-auto">AliBaba modelidagi premium ekotizim — Sotuvchilar va Dasturchilar bozori.</p>
 </header>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 35px;">
-    {% for product in products %}
-    <a href="{% url 'product_about' product.id %}" style="text-decoration: none; color: inherit; display: block;">
-        <div class="glass-card tilt-card animate-in" style="padding: 15px; height: 100%;">
-            <div style="height: 260px; border-radius: 20px; overflow: hidden; position: relative;">
-                <img src="{{ product.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
-                <div style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 12px; font-weight: 800; color: var(--accent); border: 1px solid var(--glass-border); font-size: 1.1rem;">
-                    ${{ product.price }}
-                </div>
-            </div>
-            
-            <div style="padding: 20px 5px;">
-                <h3 style="margin-bottom: 10px; font-size: 1.4rem;">{{ product.name }}</h3>
-                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">
-                    {{ product.description|truncatewords:10 }}
-                </p>
-                
-                <div style="position: relative; z-index: 10;">
-                    <button onclick="event.preventDefault(); window.location.href='{% url 'add_to_cart' product.id %}'" class="btn" style="width: 100%;">
-                        🛒 Savatga qo'shish
-                    </button>
-                </div>
-            </div>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    
+    <div class="lg:col-span-1 glass-card p-6 rounded-2xl h-fit shadow-2xl">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-widest">
+            <i class="fa-solid fa-sliders text-indigo-400"></i>
+            <span>Kategoriyalar</span>
+        </h3>
+        
+        <div class="space-y-2 mb-6">
+            {% for cat in categories %}
+            <a href="?q={{ cat.name }}" class="flex items-center justify-between text-sm text-gray-400 hover:text-cyan-400 py-1.5 transition-colors border-b border-white/5">
+                <span>{{ cat.name }}</span>
+                <span class="bg-white/5 border border-white/10 text-gray-300 text-xs px-2 py-0.5 rounded-md">{{ cat.products.count }}</span>
+            </a>
+            {% endfor %}
         </div>
-    </a>
-    {% endfor %}
+
+        <hr class="border-white/5 my-4">
+
+        <form method="GET" action="{% url 'index' %}" class="space-y-4">
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Narx filtri (so'm)</label>
+            <div class="grid grid-cols-2 gap-2">
+                <input type="number" name="start" value="{{ request.GET.start }}" placeholder="Min" class="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <input type="number" name="finish" value="{{ request.GET.finish }}" placeholder="Max" class="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            </div>
+            <button type="submit" class="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold py-2.5 rounded-xl transition-all">
+                Saralash
+            </button>
+        </form>
+    </div>
+
+    <div class="lg:col-span-3">
+        {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {% for product in products %}
+            <div class="glass-card rounded-2xl overflow-hidden p-4 flex flex-col justify-between group hover:border-indigo-500/40 transition-all duration-300 shadow-xl">
+                <div>
+                    <div class="relative pt-[90%] bg-black/20 rounded-xl overflow-hidden mb-4 border border-white/5">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        {% endif %}
+                        <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-xl text-xs font-bold text-cyan-400 border border-white/10">
+                            {{ product.price }} so'm
+                        </div>
+                    </div>
+
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-indigo-400">{{ product.category.name }}</span>
+                    <a href="{% url 'product_about' product.id %}" class="text-base font-bold text-white hover:text-indigo-400 transition-colors line-clamp-1 mt-1 block">
+                        {{ product.name }}
+                    </a>
+                    
+                    {% if product.seller %}
+                    <p class="text-[11px] text-gray-500 mt-1">
+                        <i class="fa-solid fa-store text-cyan-400/70 mr-1"></i>Sotuvchi: <span class="text-gray-300 font-medium">{{ product.seller.username }}</span>
+                    </p>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4">
+                    <div class="flex items-center justify-between text-xs text-gray-400 mb-3">
+                        <span>Zaxirada:</span>
+                        <span class="font-bold text-white">{{ product.stock }} ta</span>
+                    </div>
+                    
+                    <a href="{% url 'add_to_cart' product.id %}" class="w-full bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/50 text-white text-xs font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-cart-plus text-indigo-400"></i>
+                        <span>Savatga qo'shish</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="glass-card p-12 text-center text-gray-500 rounded-2xl">
+            <i class="fa-regular fa-folder-open text-4xl mb-2 text-gray-600"></i>
+            <p class="text-sm">Hozircha hech narsa topilmadi.</p>
+        </div>
+        {% endif %}
+    </div>
 </div>
+
 {% endblock %}

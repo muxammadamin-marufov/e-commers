@@ -1,59 +1,200 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="glass-card animate-in">
-    <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Sizning <span style="color: var(--accent);">Tanlovlaringiz</span></h2>
-    
-    {% for item in cart_items %}
-    <div id="cart-item-{{ item.product.id }}" style="display: flex; align-items: center; padding: 20px; border-bottom: 1px solid var(--glass-border); margin-bottom: 15px; transition: 0.3s;">
-        <img src="{{ item.product.image.url }}" style="width: 80px; height: 80px; border-radius: 15px; object-fit: cover; margin-right: 25px;">
-        
-        <div style="flex-grow: 1;">
-            <h4 style="font-size: 1.2rem;">{{ item.product.name }}</h4>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px;">
-                Donasi: $<span id="price-{{ item.product.id }}">{{ item.product.price }}</span> | Omborda: {{ item.product.stock }} ta
-            </p>
-            
-            <div style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 12px; border: 1px solid var(--glass-border); width: fit-content;">
-                
-                <button onclick="updateCart('{{ item.product.id }}', 'minus')" style="background:none; border:none; color:var(--accent); font-size:1.5rem; cursor:pointer; font-weight:800;">−</button>
 
-                <input type="number" 
-                       id="qty-{{ item.product.id }}" 
-                       value="{{ item.quantity }}" 
-                       min="1" max="{{ item.product.stock }}"
-                       onchange="updateCart('{{ item.product.id }}', 'manual')"
-                       style="width: 60px; text-align: center; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); color: white; font-weight: 800; font-size: 1.1rem; border-radius: 8px; padding: 2px;">
-
-                <button onclick="updateCart('{{ item.product.id }}', 'plus')" style="background:none; border:none; color:var(--accent); font-size:1.5rem; cursor:pointer; font-weight:800;">+</button>
-            </div>
-        </div>
-
-        <div style="text-align: right;">
-            <div id="total-{{ item.product.id }}" style="font-size: 1.3rem; font-weight: 800; color: var(--text); transition: 0.2s;">
-                ${{ item.total_price }}
-            </div>
-            <button onclick="updateCart('{{ item.product.id }}', 'delete')" style="background:none; border:none; color: #ef4444; font-size: 0.8rem; cursor:pointer; margin-top: 10px;">O'chirish</button>
-        </div>
-    </div>
-    {% empty %}
-    <p id="empty-msg" style="text-align: center; padding: 50px; color: #64748b;">Savat bo'sh...</p>
-    {% endfor %}
+<div class="max-w-5xl mx-auto px-4 py-6">
+    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-8 text-white">
+        Sizning <span class="text-gradient">Tanlovlaringiz</span>
+    </h2>
     
     {% if cart_items %}
-    <div id="checkout-section" style="text-align: right; padding-top: 30px;">
-        <p style="font-size: 1rem; color: #94a3b8;">Umumiy:</p>
-        <h2 style="font-size: 3rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-            $<span id="cart-total-price">{{ total }}</span>
-        </h2>
-        <a href="{% url 'checkout' %}" class="btn" style="margin-top: 20px; padding: 20px 60px;">Buyurtma Berish</a>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        
+        <div class="lg:col-span-2 space-y-4">
+            {% for item in cart_items %}
+            <div id="cart-item-{{ item.product.id }}" 
+                 class="glass-card p-4 rounded-2xl border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-300 hover:border-indigo-500/30 shadow-xl">
+                
+                <div class="flex items-center gap-4 w-full sm:w-auto">
+                    <div class="w-20 h-20 bg-black/30 border border-white/10 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center text-gray-500">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <i class="fa-solid fa-box-open text-2xl text-indigo-400/60"></i>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-base font-bold text-white line-clamp-1">{{ item.product.name }}</h4>
+                        <p class="text-xs text-gray-400 mt-1">
+                            Donasi: <span class="text-cyan-400 font-semibold">{{ item.product.price }} so'm</span>
+                        </p>
+                        <p class="text-[11px] text-gray-500 mt-0.5">
+                            Omborda: {{ item.product.stock }} ta mavjud
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-white/5">
+                    
+                    <div class="flex items-center bg-black/40 border border-white/10 rounded-xl p-1 overflow-hidden focus-within:border-indigo-500/50 transition-all">
+                        <button onclick="updateCart('{{ item.product.id }}', 'minus')" 
+                                class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 rounded-lg text-sm transition-colors focus:outline-none">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                        
+                        <input type="number" id="qty-{{ item.product.id }}" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}"
+                               onchange="manualUpdateCart('{{ item.product.id }}', this.value)"
+                               class="w-14 text-center bg-transparent border-none text-sm font-bold text-white focus:outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                        
+                        <button onclick="updateCart('{{ item.product.id }}', 'plus')" 
+                                class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 rounded-lg text-sm transition-colors focus:outline-none">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <div class="text-right min-w-[95px]">
+                        <span id="total-{{ item.product.id }}" class="text-sm font-black text-indigo-300">
+                            {{ item.total_price }} so'm
+                        </span>
+                    </div>
+
+                    <button onclick="updateCart('{{ item.product.id }}', 'delete')" 
+                            class="p-2.5 text-rose-400 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl border border-rose-500/10 transition-all" title="O'chirish">
+                        <i class="fa-regular fa-trash-can text-sm"></i>
+                    </button>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="glass-card p-6 rounded-2xl border border-white/5 shadow-2xl sticky top-24">
+            <h3 class="text-lg font-bold text-white mb-4 border-b border-white/5 pb-3">Xarid balansi</h3>
+            
+            <div class="space-y-3 text-sm text-gray-400 mb-6">
+                <div class="flex justify-between">
+                    <span>Tanlangan tovarlar:</span>
+                    <span class="text-white font-medium">{{ cart_items.count }} xil</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Yetkazib berish:</span>
+                    <span class="text-emerald-400 font-semibold">Bepul (0 so'm)</span>
+                </div>
+                <hr class="border-white/5">
+                <div class="flex justify-between items-baseline pt-2">
+                    <span class="text-base font-bold text-white">Jami summa:</span>
+                    <span id="cart-total-summary" class="text-xl font-black text-gradient">
+                        {{ total }} so'm
+                    </span>
+                </div>
+            </div>
+            
+            <a href="{% url 'checkout' %}" class="block w-full btn-premium text-center text-white font-bold py-3.5 rounded-xl shadow-lg transition-all text-sm tracking-wider uppercase">
+                Xaridni rasmiylashtirish <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>
+            </a>
+        </div>
+
+    </div>
+    {% else %}
+    <div class="glass-card p-12 text-center rounded-2xl border border-white/5 shadow-2xl max-w-md mx-auto mt-12 animate-in">
+        <div class="w-16 h-16 bg-indigo-500/10 text-indigo-400 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 border border-indigo-500/20">
+            <i class="fa-solid fa-basket-shopping"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white">Savatchangiz bo'sh</h3>
+        <p class="text-xs text-gray-400 mt-2 mb-6">Savatga hali hech qanday mahsulot qo'shmadingiz.</p>
+        <a href="{% url 'index' %}" class="btn-premium text-white text-xs font-bold px-6 py-3 rounded-xl transition-all inline-block uppercase tracking-wider">
+            Xarid qilishni boshlash
+        </a>
     </div>
     {% endif %}
 </div>
 
+{% endblock %}
+
+{% block scripts %}
 <script>
+// 1. Plus va Minus tugmalari bosilganda ishlaydigan funksiya
 function updateCart(productId, action) {
+    // Input elementini olamiz
     const qtyInput = document.getElementById(`qty-${productId}`);
-    const quantity = qtyInput ? qtyInput.value : 0;
+    
+    // Eng muhim joyi: Hozir input ichida qanday son turgan bo'lsa, o'shani o'qib olamiz (Qo'lda yozilgan bo'lsa ham)
+    let currentQty = parseInt(qtyInput ? qtyInput.value : 1);
+    
+    // Agar input ichidagi qiymat son bo'lmasa, 1 deb hisoblaymiz
+    if (isNaN(currentQty) || currentQty < 1) {
+        currentQty = 1;
+    }
+
+    // Tugmaga qarab qiymatni oshiramiz yoki kamaytiramiz
+    if (action === 'plus') currentQty += 1;
+    if (action === 'minus') currentQty -= 1;
+    
+    let targetAction = action;
+    // Agar ayirganda 0 bo'lib qolsa, o'chirish so'rovini yuboramiz
+    if (action === 'minus' && currentQty <= 0) {
+        targetAction = 'delete';
+    }
+
+    // Serverga so'rov yuborish
+    fetch(`/update-cart/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            'action': targetAction,
+            'quantity': currentQty
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const itemElement = document.getElementById(`cart-item-${productId}`);
+
+            if (data.deleted) {
+                if(itemElement) {
+                    itemElement.style.transform = 'scale(0.95)';
+                    itemElement.style.opacity = '0';
+                    setTimeout(() => {
+                        itemElement.remove();
+                        if (data.cart_total <= 0) {
+                            location.reload(); 
+                        }
+                    }, 300);
+                }
+            } else {
+                if (data.error) {
+                    alert(data.message); // Omborda tovar yetishmasa ogohlantirish
+                }
+                // Input qiymatini serverdan kelgan haqiqiy miqdor bilan yangilaymiz
+                if(qtyInput) qtyInput.value = data.item_qty;
+                
+                // Mahsulotning umumiy narxini yangilash
+                const totalItemBox = document.getElementById(`total-${productId}`);
+                if(totalItemBox) {
+                    totalItemBox.innerText = data.item_total.toLocaleString() + " so'm";
+                }
+            }
+            
+            // Chek panelidagi umumiy summani yangilash
+            const globalTotalBox = document.getElementById('cart-total-summary');
+            if(globalTotalBox) {
+                globalTotalBox.innerText = data.cart_total.toLocaleString() + " so'm";
+            }
+        }
+    })
+    .catch(error => console.error('Xatolik:', error));
+}
+
+// 2. Input ichiga qo'lda son yozib, inputdan chiqilganda (onchange) ishlaydigan funksiya
+function manualUpdateCart(productId, value) {
+    let currentQty = parseInt(value);
+    
+    if (isNaN(currentQty) || currentQty < 1) {
+        currentQty = 1;
+    }
 
     fetch(`/update-cart/${productId}/`, {
         method: 'POST',
@@ -62,41 +203,23 @@ function updateCart(productId, action) {
             'X-CSRFToken': '{{ csrf_token }}'
         },
         body: JSON.stringify({
-            'action': action,
-            'quantity': quantity
+            'action': 'manual',
+            'quantity': currentQty
         })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            const itemElement = document.getElementById(`cart-item-${productId}`);
-
-            // 1. O'chirish holati (delete tugmasi bosilsa yoki input 0 bo'lsa)
-            if (data.deleted) {
-                itemElement.style.transform = 'translateX(50px)'; // O'ngga siljish
-                itemElement.style.opacity = '0'; // Yo'qolish
-                
-                setTimeout(() => {
-                    itemElement.remove();
-                    // Agar savat butunlay bo'shab qolsa
-                    if (data.cart_total <= 0) {
-                        location.reload(); 
-                    }
-                }, 400);
-            } 
-            // 2. Miqdor o'zgarishi
-            else {
-                if (data.error) {
-                    alert(data.message);
-                }
-                qtyInput.value = data.item_qty;
-                document.getElementById(`total-${productId}`).innerText = '$' + data.item_total.toFixed(2);
+            if (data.error) {
+                alert(data.message);
             }
-            
-            // Umumiy summani yangilash
-            document.getElementById('cart-total-price').innerText = data.cart_total.toFixed(2);
+            // Serverdan kelgan tasdiqlangan miqdorni yozamiz
+            document.getElementById(`qty-${productId}`).value = data.item_qty;
+            document.getElementById(`total-${productId}`).innerText = data.item_total.toLocaleString() + " so'm";
+            document.getElementById('cart-total-summary').innerText = data.cart_total.toLocaleString() + " so'm";
         }
-    });
+    })
+    .catch(error => console.error('Xatolik:', error));
 }
 </script>
 {% endblock %}

@@ -1,5 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
+# Standart User modelini kengaytiramiz
+class CustomUser(AbstractUser):
+    is_seller = models.BooleanField(default=False, verbose_name="Sotuvchimisiz?")
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+
+    def __str__(self):
+        return self.username
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -9,6 +17,8 @@ class Category(models.Model):
         return self.name
 
 class Product(models.Model):
+    # Har bir mahsulot endi aniq bir sotuvchiga tegishli bo'ladi
+    seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='products', limit_choices_to={'is_seller': True}, null=True, blank=True)
     name = models.CharField(max_length=200)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -20,28 +30,30 @@ class Product(models.Model):
         return self.name
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def total_price(self):
         return self.quantity * self.product.price
+
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
     address = models.TextField()
-    items_json = models.TextField(verbose_name="Buyurtma tarkibi",default="", help_text="Mahsulotlar ro'yxati")
+    items_json = models.TextField(verbose_name="Buyurtma tarkibi", default="", help_text="Mahsulotlar ro'yxati")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Order {self.id} by {self.full_name}"
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2) # Buyurtma paytidagi narx
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name}"
+        return f"{self.quantity} x {self.product.name if self.product else 'Ochirilgan mahsulot'}"

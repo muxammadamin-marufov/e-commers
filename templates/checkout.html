@@ -1,21 +1,66 @@
 {% extends "base.html" %}
 {% block content %}
-<div style="max-width: 800px; margin: 40px auto;" class="animate-in">
-    <div class="glass-card">
-        <h2 style="margin-bottom: 35px;">Ma'lumotlarni <span style="color: var(--primary);">Tasdiqlang</span></h2>
-        <form method="POST">
+
+<div class="flex justify-center items-center min-h-[80vh] px-4 py-6">
+    <div class="glass-card rounded-2xl p-8 w-full max-w-xl shadow-2xl border border-white/5 relative overflow-hidden group hover:border-indigo-500/20 transition-all duration-300">
+        
+        <div class="absolute -top-12 -right-12 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-all"></div>
+        <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition-all"></div>
+
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-extrabold tracking-tight text-white">
+                Ma'lumotlarni <span class="text-gradient">Tasdiqlang</span>
+            </h2>
+            <p class="text-xs text-gray-400 mt-2">Buyurtma to'g'ri yetib borishi uchun ma'lumotlarni aniq to'ldiring</p>
+        </div>
+
+        <form method="POST" class="space-y-5">
             {% csrf_token %}
-            <div class="input-group" style="margin-bottom: 20px;">
-                <input type="text" name="full_name" placeholder="F.I.SH" required>
+            
+            <div>
+                <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">To'liq ism-sharifingiz (F.I.SH) *</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500">
+                        <i class="fa-solid fa-user text-sm"></i>
+                    </span>
+                    <input type="text" name="full_name" placeholder="Masalan: Muhammadamin..." required 
+                           class="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-all backdrop-blur-md">
+                </div>
             </div>
-            <div class="input-group" style="margin-bottom: 20px;">
-                <input type="text" name="phone" placeholder="Telefon (+998 ...)" required>
+
+            <div>
+                <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Telefon raqamingiz *</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500">
+                        <i class="fa-solid fa-phone text-sm"></i>
+                    </span>
+                    <input type="text" name="phone" placeholder="+998 (90) 123-4567" required 
+                           class="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-all backdrop-blur-md">
+                </div>
             </div>
-            <div class="input-group" style="margin-bottom: 30px;">
-                <textarea name="address" rows="4" placeholder="Yetkazib berish manzili..." required></textarea>
+
+            <div>
+                <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Yetkazib berish manzili *</label>
+                <div class="relative">
+                    <span class="absolute top-3.5 left-4 text-gray-500">
+                        <i class="fa-solid fa-map-location-dot text-sm"></i>
+                    </span>
+                    <textarea name="address" rows="4" placeholder="Viloyat, tuman, ko'cha va uy raqami..." required 
+                              class="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-all backdrop-blur-md"></textarea>
+                </div>
             </div>
-            <button type="submit" class="btn" style="width: 100%; font-size: 1.2rem;">Xaridni Yakunlash</button>
+
+            <div class="p-4 bg-indigo-500/5 border border-indigo-500/10 rounded-xl flex items-center justify-between text-xs text-gray-400">
+                <span>To'lov usuli:</span>
+                <span class="text-white font-bold"><i class="fa-solid fa-truck text-cyan-400 mr-1"></i> Qabul qilinganda naqd/karta</span>
+            </div>
+
+            <button type="submit" class="w-full btn-premium text-white font-bold py-4 rounded-xl transition-all shadow-lg text-sm tracking-wider uppercase mt-2 flex items-center justify-center gap-2">
+                <span>Xaridni Yakunlash</span>
+                <i class="fa-solid fa-circle-check text-xs"></i>
+            </button>
         </form>
     </div>
 </div>
+
 {% endblock %}

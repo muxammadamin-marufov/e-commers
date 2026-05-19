@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-white">Sotuvchi <span class="text-gradient">Boshqaruv Paneli</span></h1>
+        <p class="text-sm text-gray-400">Do'kon ko'rsatkichlari va Gemini AI integratsiyasi.</p>
+    </div>
+    
+    <a href="#add-product-section" class="btn-premium text-white font-bold text-sm px-5 py-3 rounded-xl transition-all flex items-center gap-2">
+        <i class="fa-solid fa-plus"></i>
+        <span>Yangi Mahsulot Yuklash</span>
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="glass-card p-6 rounded-2xl flex items-center gap-4 shadow-xl">
+        <div class="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-xl flex items-center justify-center text-xl border border-indigo-500/20">
+            <i class="fa-solid fa-box"></i>
+        </div>
+        <div>
+            <p class="text-xs font-bold text-gray-500 uppercase">Jami tovarlaringiz</p>
+            <p class="text-xl font-black text-white">{{ products.count }} ta</p>
+        </div>
+    </div>
+    <div class="glass-card p-6 rounded-2xl flex items-center gap-4 shadow-xl">
+        <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 rounded-xl flex items-center justify-center text-xl border border-cyan-500/20">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div>
+            <p class="text-xs font-bold text-gray-500 uppercase">Do'kon holati</p>
+            <p class="text-xl font-black text-cyan-400">Faol (Active)</p>
+        </div>
+    </div>
+    <div class="glass-card p-6 rounded-2xl flex items-center gap-4 shadow-xl">
+        <div class="w-12 h-12 bg-fuchsia-500/10 text-fuchsia-400 rounded-xl flex items-center justify-center text-xl border border-fuchsia-500/20">
+            <i class="fa-solid fa-robot"></i>
+        </div>
+        <div>
+            <p class="text-xs font-bold text-gray-500 uppercase">AI Dvigateli</p>
+            <p class="text-xl font-black text-fuchsia-400">Gemini Flash</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <div class="lg:col-span-2 glass-card rounded-2xl shadow-2xl overflow-hidden">
+        <div class="p-5 border-b border-white/5 bg-white/5">
+            <h3 class="font-bold text-gray-200">Sizning onlayn tovarlaringiz</h3>
+        </div>
+        
+        {% if products %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-400">
+                <thead class="text-xs text-gray-500 uppercase bg-black/30 border-b border-white/5">
+                    <tr>
+                        <th class="px-6 py-4">Mahsulot nomi</th>
+                        <th class="px-6 py-4">Kategoriya</th>
+                        <th class="px-6 py-4">Narxi</th>
+                        <th class="px-6 py-4">Zaxira</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    {% for p in products %}
+                    <tr class="hover:bg-white/5 transition-colors">
+                        <td class="px-6 py-4 font-semibold text-white flex items-center gap-3">
+                            {% if p.image %}
+                            <img src="{{ p.image.url }}" class="w-10 h-10 object-cover rounded-lg border border-white/10">
+                            {% else %}
+                            <div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-gray-500"><i class="fa-regular fa-image"></i></div>
+                            {% endif %}
+                            <span>{{ p.name }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-400">{{ p.category.name }}</td>
+                        <td class="px-6 py-4 font-bold text-cyan-400">{{ p.price }} so'm</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-1 text-xs font-medium rounded-full {% if p.stock > 3 %} bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 {% else %} bg-rose-500/10 text-rose-400 border border-rose-500/20 {% endif %}">
+                                {{ p.stock }} ta
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-12 text-center text-gray-500">Hali hech qanday mahsulot qo'shmadingiz.</div>
+        {% endif %}
+    </div>
+
+    <div id="add-product-section" class="glass-card rounded-2xl shadow-2xl p-6">
+        <h3 class="font-bold text-white mb-5 flex items-center gap-2 text-lg">
+            <i class="fa-solid fa-square-plus text-indigo-400"></i>
+            <span>Yangi E'lon Yaratish</span>
+        </h3>
+
+        <form method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %} <div>
+                <label class="text-xs font-bold text-gray-400 block mb-1">Mahsulot nomi *</label>
+                <input type="text" id="ai-product-name" name="name" required placeholder="Masalan: RGB Mexanik Klaviatura" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition-all">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-xs font-bold text-gray-400 block mb-1">Narxi (so'm) *</label>
+                    <input type="number" name="price" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-400 block mb-1">Omborda miqdori *</label>
+                    <input type="number" name="stock" value="10" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-400 block mb-1">Kategoriya tanlang *</label>
+                <select name="category" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-gray-300 focus:outline-none focus:border-indigo-500">
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}" class="bg-[#050811] text-white">{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-1">
+                    <label class="text-xs font-bold text-gray-400">Tavsif va Xarakteristika *</label>
+                    <button type="button" id="generate-ai-desc" class="text-xs font-bold text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all">
+                        <i class="fa-solid fa-wand-magic-sparkles animate-pulse"></i>
+                        <span>Gemini AI Tavsif</span>
+                    </button>
+                </div>
+                <textarea id="ai-description" name="description" rows="4" required placeholder="Xususiyatlarini yozing yoki AI tugmasini bosing..." class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition-all"></textarea>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-400 block mb-1">Texnologik Rasm (.jpg, .png)</label>
+                <input type="file" name="image" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border border-white/10 file:text-xs file:font-semibold file:bg-white/5 file:text-white hover:file:bg-white/10 cursor-pointer">
+            </div>
+
+            <button type="submit" class="w-full btn-premium text-white font-bold py-3 rounded-xl transition-all mt-2">
+                E'lonni Tarmoqqa Joylash
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('generate-ai-desc').addEventListener('click', async function() {
+    const productName = document.getElementById('ai-product-name').value;
+    const descArea = document.getElementById('ai-description');
+    
+    if(!productName) {
+        alert("Iltimos, avval mahsulot nomini kiriting!");
+        return;
+    }
+    
+    this.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Tahlil qilinmoqda...';
+    this.disabled = true;
+    
+    try {
+        const response = await fetch('/generate-description/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ name: productName })
+        });
+        const data = await response.json();
+        if(data.success) {
+            descArea.value = data.description;
+        } else {
+            alert("AI tavsif yarata olmadi. API kalitni tekshiring.");
+        }
+    } catch(e) {
+        console.error(e);
+    } finally {
+        this.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Gemini AI Tavsif';
+        this.disabled = false;
+    }
+});
+</script>
+{% endblock %}

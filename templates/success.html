@@ -1,9 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<div style="text-align: center; padding: 100px 20px;" class="animate-in">
-    <div style="font-size: 6rem;">💎</div>
-    <h1 style="font-size: 3.5rem; margin: 20px 0;">Tabriklaymiz!</h1>
-    <p style="color: #94a3b8; font-size: 1.2rem; margin-bottom: 40px;">Buyurtmangiz muvaffaqiyatli qabul qilindi. Operatorlarimiz tez orada bog'lanishadi.</p>
-    <a href="{% url 'index' %}" class="btn">Bosh sahifaga qaytish</a>
+
+<div class="flex justify-center items-center min-h-[75vh] px-4">
+    <div class="glass-card rounded-2xl p-8 sm:p-12 w-full max-w-lg shadow-2xl border border-white/5 text-center relative overflow-hidden group">
+        
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all duration-500"></div>
+
+        <div class="w-20 h-20 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)] animate-bounce">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">
+            Muvaffaqiyatli <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Yakunlandi!</span>
+        </h1>
+        
+        <p class="text-gray-400 text-sm max-w-sm mx-auto leading-relaxed mb-8">
+            Buyurtmangiz tizimga muvaffaqiyatli qabul qilindi va telegram boshqaruv panelimizga yuborildi. Operatorlarimiz tez orada siz bilan bog'lanishadi.
+        </p>
+        
+        <hr class="border-white/5 mb-8">
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="{% url 'index' %}" class="btn-premium text-white text-xs font-bold px-6 py-3.5 rounded-xl transition-all uppercase tracking-wider flex items-center justify-center gap-2">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span>Xaridni davom ettirish</span>
+            </a>
+            <a href="{% url 'index' %}" class="bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-xs font-bold px-6 py-3.5 rounded-xl transition-all uppercase tracking-wider">
+                Asosiy Menyu
+            </a>
+        </div>
+    </div>
 </div>
+
 {% endblock %}
