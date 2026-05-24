@@ -1,79 +1,75 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<header class="text-center my-12">
-    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4">
-        Keling, <span class="text-gradient">Kelajakni</span> sotib olamiz
+<header class="text-center my-8 sm:my-12">
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4">
+        Keling, <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-cyan-400">Kelajakni</span> sotib olamiz
     </h1>
-    <p class="text-gray-400 text-sm max-w-md mx-auto">AliBaba modelidagi premium ekotizim — Sotuvchilar va Dasturchilar bozori.</p>
+    <p class="text-gray-500 dark:text-gray-400 text-sm max-w-md mx-auto">Sotuvchilar va xaridorlarni birlashtiruvchi zamonaviy ekotizim.</p>
 </header>
 
 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
     
-    <div class="lg:col-span-1 glass-card p-6 rounded-2xl h-fit shadow-2xl">
-        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-widest">
-            <i class="fa-solid fa-sliders text-indigo-400"></i>
+    <div class="lg:col-span-1 bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 p-6 rounded-2xl h-fit shadow-lg transition-all">
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2 uppercase tracking-widest">
+            <i class="fa-solid fa-sliders text-indigo-500 dark:text-indigo-400"></i>
             <span>Kategoriyalar</span>
         </h3>
         
         <div class="space-y-2 mb-6">
             {% for cat in categories %}
-            <a href="?q={{ cat.name }}" class="flex items-center justify-between text-sm text-gray-400 hover:text-cyan-400 py-1.5 transition-colors border-b border-white/5">
+            <a href="?q={{ cat.name }}" class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-cyan-400 py-2 transition-colors border-b border-gray-50 dark:border-white/5 last:border-0">
                 <span>{{ cat.name }}</span>
-                <span class="bg-white/5 border border-white/10 text-gray-300 text-xs px-2 py-0.5 rounded-md">{{ cat.products.count }}</span>
+                <i class="fa-solid fa-chevron-right text-[10px] opacity-50"></i>
             </a>
             {% endfor %}
         </div>
-
-        <hr class="border-white/5 my-4">
-
-        <form method="GET" action="{% url 'index' %}" class="space-y-4">
-            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Narx filtri (so'm)</label>
-            <div class="grid grid-cols-2 gap-2">
-                <input type="number" name="start" value="{{ request.GET.start }}" placeholder="Min" class="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-                <input type="number" name="finish" value="{{ request.GET.finish }}" placeholder="Max" class="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+        
+        <form action="{% url 'index' %}" method="GET" class="space-y-3">
+            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Narx bo'yicha</h4>
+            <div class="flex gap-2">
+                <input type="number" name="start" placeholder="Dan" class="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                <input type="number" name="finish" placeholder="Gacha" class="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 text-xs text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
             </div>
-            <button type="submit" class="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold py-2.5 rounded-xl transition-all">
-                Saralash
-            </button>
+            <button type="submit" class="w-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 font-bold py-2.5 rounded-lg text-xs transition-all tracking-wider">FILTRLASH</button>
         </form>
     </div>
 
     <div class="lg:col-span-3">
         {% if products %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for product in products %}
-            <div class="glass-card rounded-2xl overflow-hidden p-4 flex flex-col justify-between group hover:border-indigo-500/40 transition-all duration-300 shadow-xl">
-                <div>
-                    <div class="relative pt-[90%] bg-black/20 rounded-xl overflow-hidden mb-4 border border-white/5">
+            <div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 p-4 rounded-2xl flex flex-col justify-between group hover:shadow-xl dark:hover:border-indigo-500/40 transition-all duration-300">
+                
+                <a href="{% url 'product_about' product.id %}" class="block cursor-pointer">
+                    <div class="relative w-full h-48 mb-4 rounded-xl overflow-hidden bg-gray-50 dark:bg-black/20">
                         {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-gray-400"><i class="fa-solid fa-image text-4xl opacity-50"></i></div>
                         {% endif %}
-                        <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-xl text-xs font-bold text-cyan-400 border border-white/10">
-                            {{ product.price }} so'm
-                        </div>
                     </div>
-
-                    <span class="text-[10px] uppercase font-bold tracking-widest text-indigo-400">{{ product.category.name }}</span>
-                    <a href="{% url 'product_about' product.id %}" class="text-base font-bold text-white hover:text-indigo-400 transition-colors line-clamp-1 mt-1 block">
+                    
+                    <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
                         {{ product.name }}
-                    </a>
-                    
-                    {% if product.seller %}
-                    <p class="text-[11px] text-gray-500 mt-1">
-                        <i class="fa-solid fa-store text-cyan-400/70 mr-1"></i>Sotuvchi: <span class="text-gray-300 font-medium">{{ product.seller.username }}</span>
-                    </p>
-                    {% endif %}
-                </div>
+                    </h3>
+                </a>
 
-                <div class="mt-4">
-                    <div class="flex items-center justify-between text-xs text-gray-400 mb-3">
-                        <span>Zaxirada:</span>
-                        <span class="font-bold text-white">{{ product.stock }} ta</span>
+                {% if product.seller %}
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-1 mb-3">
+                    <i class="fa-solid fa-store text-indigo-400 mr-1"></i> Sotuvchi: <span class="font-medium text-gray-700 dark:text-gray-300">{{ product.seller.username }}</span>
+                </p>
+                {% else %}
+                <div class="h-5 mb-3"></div> {% endif %}
+
+                <div class="mt-auto">
+                    <div class="flex items-center justify-between text-xs mb-3">
+                        <span class="text-gray-500 dark:text-gray-400">Zaxirada: <b class="text-gray-900 dark:text-white">{{ product.stock }} ta</b></span>
+                        <span class="text-sm font-black text-indigo-600 dark:text-cyan-400">{{ product.price }} so'm</span>
                     </div>
                     
-                    <a href="{% url 'add_to_cart' product.id %}" class="w-full bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/50 text-white text-xs font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all">
-                        <i class="fa-solid fa-cart-plus text-indigo-400"></i>
+                    <a href="{% url 'add_to_cart' product.id %}" class="w-full bg-gray-50 dark:bg-white/5 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600/30 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-cart-plus"></i>
                         <span>Savatga qo'shish</span>
                     </a>
                 </div>
@@ -81,10 +77,13 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="glass-card p-12 text-center text-gray-500 rounded-2xl">
-            <i class="fa-regular fa-folder-open text-4xl mb-2 text-gray-600"></i>
-            <p class="text-sm">Hozircha hech narsa topilmadi.</p>
+        
+        <div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 p-16 text-center rounded-2xl shadow-sm">
+            <i class="fa-regular fa-folder-open text-5xl text-gray-300 dark:text-gray-600 mb-4 block"></i>
+            <h3 class="text-gray-500 dark:text-gray-400 font-medium">Hozircha bu yerda mahsulot yo'q</h3>
+            <p class="text-xs text-gray-400 mt-2">Boshqa toifani tanlang yoki qidiruvdan foydalanib ko'ring.</p>
         </div>
+        
         {% endif %}
     </div>
 </div>

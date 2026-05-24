@@ -1,80 +1,81 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div class="flex justify-center items-center min-h-[85vh] px-4 py-8">
-    <div class="glass-card rounded-2xl p-8 w-full max-w-lg shadow-2xl border border-white/5 relative overflow-hidden group hover:border-indigo-500/30 transition-all duration-300">
+<div class="flex justify-center items-center py-8">
+    <div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl">
         
-        <div class="absolute -top-12 -right-12 w-40 h-40 bg-fuchsia-500/10 rounded-full blur-3xl group-hover:bg-fuchsia-500/20 transition-all"></div>
-        <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-all"></div>
-
         <div class="text-center mb-8">
-            <h2 class="text-3xl font-extrabold tracking-tight text-white">
-                Ro'yxatdan <span class="text-gradient">O'tish</span>
+            <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+                Ro'yxatdan <span class="text-indigo-500 dark:text-cyan-400">O'tish</span>
             </h2>
-            <p class="text-xs text-gray-400 mt-2">Kelajak onlayn bozorining bir qismiga aylaning</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Kelajak bozori bilan birga bo'ling</p>
         </div>
 
         <form method="POST" class="space-y-4">
             {% csrf_token %}
             
-            <div>
-                <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Foydalanuvchi nomi *</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500"><i class="fa-solid fa-at text-sm"></i></span>
-                    <input type="text" name="username" placeholder="Masalan: mmm_pro" required 
-                           class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all">
+            <div class="bg-gray-50 dark:bg-white/5 p-4 rounded-xl border border-gray-200 dark:border-white/10 mb-4 flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-bold text-gray-900 dark:text-white">Siz sotuvchimisiz?</p>
+                    <p class="text-xs text-gray-500">Do'kon ochish uchun belgilang</p>
                 </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="is_seller" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                </label>
             </div>
 
             <div>
-                <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">To'liq ism-sharifingiz *</label>
+                <label class="text-xs font-bold text-gray-500 dark:text-gray-400 block mb-1">ISM FAMILIYA</label>
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500"><i class="fa-solid fa-id-card text-sm"></i></span>
-                    <input type="text" name="fullname" placeholder="Ism va familiyangiz" required 
-                           class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all">
+                    <i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" name="fullname" required class="w-full bg-gray-50 dark:bg-darkbg border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors">
                 </div>
             </div>
-
-            <div>
-                <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Telefon raqam *</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500"><i class="fa-solid fa-phone text-sm"></i></span>
-                    <input type="text" name="phone_number" placeholder="998XXXXXXXXX" required 
-                           class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 block mb-1">USERNAME</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-at absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" name="username" required class="w-full bg-gray-50 dark:bg-darkbg border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 block mb-1">TELEFON</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" name="phone_number" value="998" placeholder="998XXXXXXXXX" required class="w-full bg-gray-50 dark:bg-darkbg border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Yangi parol *</label>
+                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 block mb-1">PAROL</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500"><i class="fa-solid fa-key text-sm"></i></span>
-                        <input type="password" name="password" placeholder="••••••••" required 
-                               class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="password" name="password" required class="w-full bg-gray-50 dark:bg-darkbg border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors">
                     </div>
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Takrorlang *</label>
+                    <label class="text-xs font-bold text-gray-500 dark:text-gray-400 block mb-1">TAKRORLANG</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500"><i class="fa-solid fa-check-double text-sm"></i></span>
-                        <input type="password" name="password2" placeholder="••••••••" required 
-                               class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all">
+                        <i class="fa-solid fa-check-double absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="password" name="password2" required class="w-full bg-gray-50 dark:bg-darkbg border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors">
                     </div>
                 </div>
             </div>
-            
-            <button type="submit" class="w-full btn-premium text-white font-bold py-3.5 rounded-xl transition-all shadow-lg mt-4 text-sm tracking-widest uppercase">
+
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg mt-6 text-sm uppercase tracking-wider">
                 Hisob yaratish
             </button>
         </form>
 
-        <div class="text-center mt-6 pt-6 border-t border-white/5">
-            <p class="text-xs text-gray-400">
-                Allaqachon ro'yxatdan o'tganmisiz? 
-                <a href="{% url 'login' %}" class="text-indigo-400 hover:text-indigo-300 font-semibold ml-1 transition-colors underline underline-offset-4">Tizimga kirish</a>
+        <div class="text-center mt-6 pt-6 border-t border-gray-100 dark:border-white/10">
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                Allaqachon ro'yxatdan o'tganmisiz? <a href="{% url 'login' %}" class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Tizimga kiring</a>
             </p>
         </div>
     </div>
 </div>
-
 {% endblock %}

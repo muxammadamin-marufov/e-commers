@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="max-w-5xl mx-auto px-4 py-6">
-    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-8 text-white">
-        Sizning <span class="text-gradient">Tanlovlaringiz</span>
+<div class="max-w-6xl mx-auto py-8">
+    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-8 text-gray-900 dark:text-white">
+        Sizning <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-cyan-400">Tanlovlaringiz</span>
     </h2>
     
     {% if cart_items %}
@@ -11,99 +11,96 @@
         
         <div class="lg:col-span-2 space-y-4">
             {% for item in cart_items %}
-            <div id="cart-item-{{ item.product.id }}" 
-                 class="glass-card p-4 rounded-2xl border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-300 hover:border-indigo-500/30 shadow-xl">
+            <div id="cart-item-{{ item.product.id }}" class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 transition-all duration-300 hover:shadow-lg dark:hover:border-indigo-500/30">
                 
-                <div class="flex items-center gap-4 w-full sm:w-auto">
-                    <div class="w-20 h-20 bg-black/30 border border-white/10 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center text-gray-500">
+                <div class="flex items-center gap-5 w-full sm:w-auto">
+                    <div class="w-24 h-24 bg-gray-50 dark:bg-black/30 border border-gray-100 dark:border-white/10 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center text-gray-400">
                         {% if item.product.image %}
                             <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
                         {% else %}
-                            <i class="fa-solid fa-box-open text-2xl text-indigo-400/60"></i>
+                            <i class="fa-solid fa-box-open text-3xl text-gray-300 dark:text-indigo-400/60"></i>
                         {% endif %}
                     </div>
                     
                     <div>
-                        <h4 class="text-base font-bold text-white line-clamp-1">{{ item.product.name }}</h4>
-                        <p class="text-xs text-gray-400 mt-1">
-                            Donasi: <span class="text-cyan-400 font-semibold">{{ item.product.price }} so'm</span>
-                        </p>
-                        <p class="text-[11px] text-gray-500 mt-0.5">
-                            Omborda: {{ item.product.stock }} ta mavjud
-                        </p>
+                        <h4 class="text-base font-bold text-gray-900 dark:text-white line-clamp-2 leading-tight">{{ item.product.name }}</h4>
+                        <p class="text-sm font-semibold text-indigo-600 dark:text-cyan-400 mt-1">Donasi: {{ item.product.price }} so'm</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Omborda: {{ item.product.stock }} ta</p>
                     </div>
                 </div>
                 
-                <div class="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-white/5">
+                <div class="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto border-t sm:border-t-0 pt-4 sm:pt-0 border-gray-100 dark:border-white/5">
                     
-                    <div class="flex items-center bg-black/40 border border-white/10 rounded-xl p-1 overflow-hidden focus-within:border-indigo-500/50 transition-all">
-                        <button onclick="updateCart('{{ item.product.id }}', 'minus')" 
-                                class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 rounded-lg text-sm transition-colors focus:outline-none">
-                            <i class="fa-solid fa-minus"></i>
+                    <div class="flex items-center bg-gray-50 dark:bg-black/40 border border-gray-200 dark:border-white/10 rounded-xl p-1">
+                        <button onclick="updateCart('{{ item.product.id }}', 'minus')" class="w-8 h-8 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-white hover:text-gray-900 dark:hover:bg-white/5 dark:hover:text-white rounded-lg transition-colors focus:outline-none">
+                            <i class="fa-solid fa-minus text-xs"></i>
                         </button>
                         
-                        <input type="number" id="qty-{{ item.product.id }}" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}"
-                               onchange="manualUpdateCart('{{ item.product.id }}', this.value)"
-                               class="w-14 text-center bg-transparent border-none text-sm font-bold text-white focus:outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                        <input type="number" 
+                               id="qty-{{ item.product.id }}" 
+                               value="{{ item.quantity }}" 
+                               min="1" 
+                               max="{{ item.product.stock }}" 
+                               data-id="{{ item.product.id }}"
+                               class="qty-input-manual w-12 text-center bg-transparent border-none text-sm font-bold text-gray-900 dark:text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         
-                        <button onclick="updateCart('{{ item.product.id }}', 'plus')" 
-                                class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 rounded-lg text-sm transition-colors focus:outline-none">
-                            <i class="fa-solid fa-plus"></i>
+                        <button onclick="updateCart('{{ item.product.id }}', 'plus')" class="w-8 h-8 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-white hover:text-gray-900 dark:hover:bg-white/5 dark:hover:text-white rounded-lg transition-colors focus:outline-none">
+                            <i class="fa-solid fa-plus text-xs"></i>
                         </button>
                     </div>
 
-                    <div class="text-right min-w-[95px]">
-                        <span id="total-{{ item.product.id }}" class="text-sm font-black text-indigo-300">
+                    <div class="text-right min-w-[100px]">
+                        <span id="total-{{ item.product.id }}" class="text-base font-black text-gray-900 dark:text-indigo-300">
                             {{ item.total_price }} so'm
                         </span>
                     </div>
 
-                    <button onclick="updateCart('{{ item.product.id }}', 'delete')" 
-                            class="p-2.5 text-rose-400 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl border border-rose-500/10 transition-all" title="O'chirish">
-                        <i class="fa-regular fa-trash-can text-sm"></i>
+                    <button onclick="updateCart('{{ item.product.id }}', 'delete')" class="p-3 text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 dark:text-rose-400 dark:hover:text-white dark:bg-rose-500/10 dark:hover:bg-rose-500 rounded-xl transition-all" title="Savatdan o'chirish">
+                        <i class="fa-regular fa-trash-can"></i>
                     </button>
                 </div>
-
             </div>
             {% endfor %}
         </div>
         
-        <div class="glass-card p-6 rounded-2xl border border-white/5 shadow-2xl sticky top-24">
-            <h3 class="text-lg font-bold text-white mb-4 border-b border-white/5 pb-3">Xarid balansi</h3>
+        <div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 p-6 rounded-2xl shadow-xl dark:shadow-none sticky top-24">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-white/5 pb-4">Xarid balansi</h3>
             
-            <div class="space-y-3 text-sm text-gray-400 mb-6">
-                <div class="flex justify-between">
+            <div class="space-y-4 text-sm text-gray-600 dark:text-gray-400 mb-6">
+                <div class="flex justify-between items-center">
                     <span>Tanlangan tovarlar:</span>
-                    <span class="text-white font-medium">{{ cart_items.count }} xil</span>
+                    <span class="text-gray-900 dark:text-white font-bold px-3 py-1 bg-gray-100 dark:bg-white/10 rounded-lg">{{ cart_items.count }} xil</span>
                 </div>
-                <div class="flex justify-between">
+                <div class="flex justify-between items-center">
                     <span>Yetkazib berish:</span>
-                    <span class="text-emerald-400 font-semibold">Bepul (0 so'm)</span>
+                    <span class="text-green-600 dark:text-emerald-400 font-bold px-3 py-1 bg-green-50 dark:bg-emerald-500/10 rounded-lg border border-green-100 dark:border-emerald-500/20">Bepul (0 so'm)</span>
                 </div>
-                <hr class="border-white/5">
-                <div class="flex justify-between items-baseline pt-2">
-                    <span class="text-base font-bold text-white">Jami summa:</span>
-                    <span id="cart-total-summary" class="text-xl font-black text-gradient">
+                
+                <hr class="border-gray-100 dark:border-white/5 my-4">
+                
+                <div class="flex justify-between items-end pt-2">
+                    <span class="text-base font-bold text-gray-900 dark:text-white">Jami summa:</span>
+                    <span id="cart-total-summary" class="text-2xl font-black text-indigo-600 dark:text-cyan-400">
                         {{ total }} so'm
                     </span>
                 </div>
             </div>
             
-            <a href="{% url 'checkout' %}" class="block w-full btn-premium text-center text-white font-bold py-3.5 rounded-xl shadow-lg transition-all text-sm tracking-wider uppercase">
-                Xaridni rasmiylashtirish <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>
+            <a href="{% url 'checkout' %}" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white text-center font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/30 transition-all text-sm tracking-wider uppercase">
+                Xaridni rasmiylashtirish <i class="fa-solid fa-arrow-right ml-2"></i>
             </a>
         </div>
 
     </div>
     {% else %}
-    <div class="glass-card p-12 text-center rounded-2xl border border-white/5 shadow-2xl max-w-md mx-auto mt-12 animate-in">
-        <div class="w-16 h-16 bg-indigo-500/10 text-indigo-400 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 border border-indigo-500/20">
+    <div class="bg-white dark:bg-white/5 p-12 text-center rounded-3xl border border-gray-100 dark:border-white/10 shadow-xl max-w-lg mx-auto mt-12">
+        <div class="w-24 h-24 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
             <i class="fa-solid fa-basket-shopping"></i>
         </div>
-        <h3 class="text-lg font-bold text-white">Savatchangiz bo'sh</h3>
-        <p class="text-xs text-gray-400 mt-2 mb-6">Savatga hali hech qanday mahsulot qo'shmadingiz.</p>
-        <a href="{% url 'index' %}" class="btn-premium text-white text-xs font-bold px-6 py-3 rounded-xl transition-all inline-block uppercase tracking-wider">
-            Xarid qilishni boshlash
+        <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white">Savatchangiz bo'sh</h3>
+        <p class="text-gray-500 dark:text-gray-400 mt-2 mb-8">Savatga hali hech qanday mahsulot qo'shmadingiz. Birinchi xaridingizni hoziroq qiling!</p>
+        <a href="{% url 'index' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold px-8 py-4 rounded-xl transition-all shadow-lg inline-block uppercase tracking-wider">
+            Do'konga qaytish
         </a>
     </div>
     {% endif %}
@@ -113,113 +110,117 @@
 
 {% block scripts %}
 <script>
-// 1. Plus va Minus tugmalari bosilganda ishlaydigan funksiya
-function updateCart(productId, action) {
-    // Input elementini olamiz
-    const qtyInput = document.getElementById(`qty-${productId}`);
-    
-    // Eng muhim joyi: Hozir input ichida qanday son turgan bo'lsa, o'shani o'qib olamiz (Qo'lda yozilgan bo'lsa ham)
-    let currentQty = parseInt(qtyInput ? qtyInput.value : 1);
-    
-    // Agar input ichidagi qiymat son bo'lmasa, 1 deb hisoblaymiz
-    if (isNaN(currentQty) || currentQty < 1) {
-        currentQty = 1;
-    }
+// Parallel so'rovlarni bloklash uchun global holat (Race condition oldini olish)
+const activeRequests = new Set();
 
-    // Tugmaga qarab qiymatni oshiramiz yoki kamaytiramiz
+function updateCart(productId, action) {
+    if (activeRequests.has(productId)) return; // Agar so'rov bajarilayotgan bo'lsa, keyingisini kutadi
+
+    const qtyInput = document.getElementById(`qty-${productId}`);
+    let currentQty = parseInt(qtyInput ? qtyInput.value : 1);
+    if (isNaN(currentQty) || currentQty < 1) { currentQty = 1; }
+
     if (action === 'plus') currentQty += 1;
     if (action === 'minus') currentQty -= 1;
-    
     let targetAction = action;
-    // Agar ayirganda 0 bo'lib qolsa, o'chirish so'rovini yuboramiz
-    if (action === 'minus' && currentQty <= 0) {
-        targetAction = 'delete';
-    }
+    if (action === 'minus' && currentQty <= 0) { targetAction = 'delete'; }
 
-    // Serverga so'rov yuborish
+    activeRequests.add(productId);
+
     fetch(`/update-cart/${productId}/`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify({
-            'action': targetAction,
-            'quantity': currentQty
-        })
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+        body: JSON.stringify({'action': targetAction, 'quantity': currentQty})
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             const itemElement = document.getElementById(`cart-item-${productId}`);
-
             if (data.deleted) {
                 if(itemElement) {
-                    itemElement.style.transform = 'scale(0.95)';
                     itemElement.style.opacity = '0';
                     setTimeout(() => {
                         itemElement.remove();
-                        if (data.cart_total <= 0) {
-                            location.reload(); 
-                        }
+                        if (data.cart_total <= 0) location.reload(); 
                     }, 300);
                 }
             } else {
-                if (data.error) {
-                    alert(data.message); // Omborda tovar yetishmasa ogohlantirish
-                }
-                // Input qiymatini serverdan kelgan haqiqiy miqdor bilan yangilaymiz
+                if (data.error) alert(data.message);
                 if(qtyInput) qtyInput.value = data.item_qty;
-                
-                // Mahsulotning umumiy narxini yangilash
                 const totalItemBox = document.getElementById(`total-${productId}`);
-                if(totalItemBox) {
-                    totalItemBox.innerText = data.item_total.toLocaleString() + " so'm";
-                }
+                if(totalItemBox) totalItemBox.innerText = data.item_total.toLocaleString() + " so'm";
             }
-            
-            // Chek panelidagi umumiy summani yangilash
             const globalTotalBox = document.getElementById('cart-total-summary');
-            if(globalTotalBox) {
-                globalTotalBox.innerText = data.cart_total.toLocaleString() + " so'm";
-            }
+            if(globalTotalBox) globalTotalBox.innerText = data.cart_total.toLocaleString() + " so'm";
         }
     })
-    .catch(error => console.error('Xatolik:', error));
+    .catch(error => console.error('Xatolik:', error))
+    .finally(() => {
+        activeRequests.delete(productId);
+    });
 }
 
-// 2. Input ichiga qo'lda son yozib, inputdan chiqilganda (onchange) ishlaydigan funksiya
 function manualUpdateCart(productId, value) {
+    if (activeRequests.has(productId)) return;
+
     let currentQty = parseInt(value);
-    
-    if (isNaN(currentQty) || currentQty < 1) {
-        currentQty = 1;
+    const qtyInput = document.getElementById(`qty-${productId}`);
+    const maxStock = parseInt(qtyInput.getAttribute('max')) || 999;
+
+    if (isNaN(currentQty) || currentQty < 1) { currentQty = 1; }
+    if (currentQty > maxStock) {
+        alert(`Uzr, omborda jami ${maxStock} ta mahsulot bor.`);
+        currentQty = maxStock;
     }
+
+    qtyInput.value = currentQty;
+    activeRequests.add(productId);
 
     fetch(`/update-cart/${productId}/`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify({
-            'action': 'manual',
-            'quantity': currentQty
-        })
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+        body: JSON.stringify({'action': 'manual', 'quantity': currentQty})
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            if (data.error) {
-                alert(data.message);
-            }
-            // Serverdan kelgan tasdiqlangan miqdorni yozamiz
-            document.getElementById(`qty-${productId}`).value = data.item_qty;
-            document.getElementById(`total-${productId}`).innerText = data.item_total.toLocaleString() + " so'm";
-            document.getElementById('cart-total-summary').innerText = data.cart_total.toLocaleString() + " so'm";
+            if (data.error) alert(data.message);
+            if (qtyInput) qtyInput.value = data.item_qty;
+            
+            const totalBox = document.getElementById(`total-${productId}`);
+            if (totalBox) totalBox.innerText = data.item_total.toLocaleString() + " so'm";
+            
+            const globalTotalBox = document.getElementById('cart-total-summary');
+            if (globalTotalBox) globalTotalBox.innerText = data.cart_total.toLocaleString() + " so'm";
         }
     })
-    .catch(error => console.error('Xatolik:', error));
+    .catch(error => console.error('Xatolik:', error))
+    .finally(() => {
+        activeRequests.delete(productId);
+    });
 }
+
+// Sahifa yuklangandan so'ng hamma qo'lda kiritish inputlarini mukammal boshqarish
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.qty-input-manual').forEach(input => {
+        let lastSavedValue = input.value;
+
+        // Enter bosilganda inputdan fokusni olib tashlaymiz (Double-trigger bo'lmaydi)
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.blur(); 
+            }
+        });
+
+        // Fokus yo'qolganda faqat qiymat o'zgargan bo'lsagina serverga bitta so'rov yuboradi
+        input.addEventListener('blur', function() {
+            if (this.value !== lastSavedValue) {
+                lastSavedValue = this.value;
+                manualUpdateCart(this.dataset.id, this.value);
+            }
+        });
+    });
+});
 </script>
 {% endblock %}

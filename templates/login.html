@@ -1,57 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div class="flex justify-center items-center min-h-[75vh] px-4">
-    <div class="glass-card rounded-2xl p-8 w-full max-w-md shadow-2xl border border-white/5 relative overflow-hidden group hover:border-indigo-500/30 transition-all duration-300">
+<div class="flex justify-center items-center min-h-[70vh]">
+    <div class="bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-2xl p-8 w-full max-w-md shadow-2xl relative overflow-hidden">
         
-        <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-all"></div>
-        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition-all"></div>
-
-        <div class="text-center mb-8">
-            <h2 class="text-3xl font-extrabold tracking-tight text-white">
-                Tizimga <span class="text-gradient">Kirish</span>
+        <div class="text-center mb-8 relative z-10">
+            <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+                Tizimga <span class="text-indigo-500 dark:text-cyan-400">Kirish</span>
             </h2>
-            <p class="text-xs text-gray-400 mt-2">MMM.PRO ekotizimiga qaytganingizdan xursandmiz</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">MMM.PRO ga qaytganingizdan xursandmiz</p>
         </div>
 
-        <form method="POST" class="space-y-5">
+        <form method="POST" class="space-y-5 relative z-10">
             {% csrf_token %}
-            
             <div>
-                <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Foydalanuvchi nomi</label>
+                <label class="text-xs font-bold text-gray-500 dark:text-gray-400 block mb-1">LOGIN</label>
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500">
-                        <i class="fa-solid fa-user text-sm"></i>
-                    </span>
-                    <input type="text" name="user" placeholder="username" required 
-                           class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all backdrop-blur-md">
+                    <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" name="user" required class="w-full bg-gray-50 dark:bg-darkbg border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors">
                 </div>
             </div>
 
             <div>
-                <label class="text-xs font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Parol</label>
+                <label class="text-xs font-bold text-gray-500 dark:text-gray-400 block mb-1">PAROL</label>
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500">
-                        <i class="fa-solid fa-lock text-sm"></i>
-                    </span>
-                    <input type="password" name="password" placeholder="••••••••" required 
-                           class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all backdrop-blur-md">
+                    <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="password" name="password" required class="w-full bg-gray-50 dark:bg-darkbg border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors">
                 </div>
             </div>
 
-            <button type="submit" class="w-full btn-premium text-white font-bold py-3.5 rounded-xl transition-all shadow-lg mt-2 flex items-center justify-center gap-2 text-sm tracking-wider uppercase">
-                <span>Davom etish</span>
-                <i class="fa-solid fa-arrow-right-long text-xs"></i>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg mt-2 flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                Davom etish <i class="fa-solid fa-arrow-right"></i>
             </button>
         </form>
 
-        <div class="text-center mt-6 pt-6 border-t border-white/5">
-            <p class="text-xs text-gray-400">
-                Hali hisobingiz yo'qmi? 
-                <a href="{% url 'register' %}" class="text-cyan-400 hover:text-cyan-300 font-semibold ml-1 transition-colors underline underline-offset-4">Ro'yxatdan o'tish</a>
-            </p>
+        <div class="text-center mt-6 pt-6 border-t border-gray-100 dark:border-white/10 relative z-10">
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                Hisobingiz yo'qmi? <a href="{% url 'register' %}" class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">Ro'yxatdan o'ting</a>
+            </button>
         </div>
     </div>
 </div>
-
 {% endblock %}
